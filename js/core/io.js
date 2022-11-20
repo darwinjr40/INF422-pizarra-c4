@@ -75,13 +75,14 @@ io.on('connection', (socket) => {
     // consumir el endpoint para obtener el usuario por su token
     // le paso el token del usuario como parametro
     // TODO: CAMBIAR A LA URL DE MI API
-    const responseUser = await axios.get('http://localhost:5000/apis/user/' + name);
+    // const responseUser = await axios.get('http://localhost:5000/apis/user/' + name);
+    const responseUser = await axios.get('http://localhost/sw1-p2-modeloC4/public/api/user/' + name);
 
     // consumir el endpoint para obtener la el proyecto por su codigo/llave
     // le paso el codigo de la sala
     // TODO: CAMBIAR A LA URL DE MI API
-    const responseProject = await axios.get('http://localhost:5000/apis/cargar-salas/' + room);
-
+    // const responseProject = await axios.get('http://localhost:5000/apis/cargar-salas/' + room);
+    const responseProject = await axios.get('http://localhost/sw1-p2-modeloC4/public/api/cargar-diagrama/' + room);
     if ((responseUser.status === 200 && responseProject.status === 200) && responseUser.data.name && responseProject.data.nombre) {
 
       const { user, error } = addUser(name, responseUser.data.name, room);
@@ -127,10 +128,11 @@ io.on('connection', (socket) => {
       // armo el body con el xml del diagrama
       const body = {
         content: roomGraphXmls[data.room]
-      }
+      };
       // TODO: CAMBIAR A LA URL DE MI API
-      const response = await axios.put('http://localhost:5000/apis/guardar-diagrama/' + data.room, body);
-      //console.log(response.status);
+      // const response = await axios.put('http://localhost:5000/apis/guardar-diagrama/' + data.room, body);
+      const response = await axios.put('http://localhost/sw1-p2-modeloC4/public/api/guardar-diagrama/' + data.room, body);
+      // console.log(response.status);
       let message = 'Ocurrio un error al guardar el diagrama.';
       if (response.status === 200) {
         message = 'Diagrama guardado con exito';
@@ -172,11 +174,11 @@ io.on('connection', (socket) => {
 
 });
 
-//process.env.PORT ||9090
+// process.env.PORT ||9090
 server.listen(9090);
 console.log('servidor socket conectado en el puerto 9090');
 module.exports = {
   sockets,
   server,
   io
-}
+};

@@ -22,6 +22,7 @@
     "mxPoint": false
   },
   "rules": {
+    "linebreak-style":["error", "windows"],
     // Strict mode
     "strict": [2, "never"],
 

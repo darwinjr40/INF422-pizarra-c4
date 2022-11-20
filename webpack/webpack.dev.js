@@ -1,11 +1,11 @@
 var SourceMapDevToolPlugin = require('webpack/lib/SourceMapDevToolPlugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-//const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 /**
  * Is build for Production
  * @type {boolean}
  */
- const isProd = process.argv.includes('production');
+const isProd = process.argv.includes('production');
 
 
 /*
