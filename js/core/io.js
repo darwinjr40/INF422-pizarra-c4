@@ -94,9 +94,10 @@ io.on('connection', (socket) => {
         // Save the list of all connections to a variable
         sockets[socket.id] = { socket, user };
         let xmlString = '';
-        if (!findRoom(room)) {
-          roomGraphXmls[room] = responseProject.data.content || xmlString;
-        }
+        // if (!findRoom(room)) {
+        //   roomGraphXmls[room] = responseProject.data.content || xmlString;
+        // }
+        roomGraphXmls[room] = responseProject.data.content || xmlString;
         xmlString = roomGraphXmls[room];
         // join to room
         socket.join(user.room);

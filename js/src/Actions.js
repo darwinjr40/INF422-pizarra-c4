@@ -1,6 +1,8 @@
 var saveFile = require('./Save.js');
 var ExportDialog = require('./Dialogs/ExportDialog');
 var GenerateCodeDialog = require('./Dialogs/GenerateCodeDialog');
+const EditorUi = require('../src/EditorUi.js');
+
 
 /**
  * Copyright (c) 2006-2012, JGraph Ltd
@@ -21,6 +23,7 @@ Actions.prototype.init = function () {
   var ui = this.editorUi;
   var editor = ui.editor;
   var graph = editor.graph;
+
   var isGraphEnabled = function () {
     return Action.prototype.isEnabled.apply(this, arguments) && graph.isEnabled();
   };
@@ -37,57 +40,84 @@ Actions.prototype.init = function () {
 
   //   ui.openFile();
   // });
+  //IMPORT-------------------------------------------------------------------------------
   this.addAction('import...', function () {
-    window.openNew = false;
-    window.openKey = 'import';
+    // window.openNew = false;
+    // window.openKey = 'import';
 
-    // Closes dialog after open
-    window.openFile = new OpenFile(mxUtils.bind(this, function () {
-      ui.hideDialog();
-    }));
+    // // Closes dialog after open
+    // window.openFile = new OpenFile(mxUtils.bind(this, function () {
+    //   ui.hideDialog();
+    // }));
 
-    window.openFile.setConsumer(mxUtils.bind(this, function (xml, filename) {
-      try {
-        var doc = mxUtils.parseXml(xml);
-        var model = new mxGraphModel();
-        var codec = new mxCodec(doc);
-        codec.decode(doc.documentElement, model);
+    // window.openFile.setConsumer(mxUtils.bind(this, function (xml, filename) {
+    //   try {
+    //     var doc = mxUtils.parseXml(xml);
+    //     var model = new mxGraphModel();
+    //     var codec = new mxCodec(doc);
+    //     codec.decode(doc.documentElement, model);
 
-        var children = model.getChildren(model.getChildAt(model.getRoot(), 0));
-        editor.graph.setSelectionCells(editor.graph.importCells(children));
-      } catch (e) {
-        mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
-      }
-    }));
+    //     var children = model.getChildren(model.getChildAt(model.getRoot(), 0));
+    //     editor.graph.setSelectionCells(editor.graph.importCells(children));
+    //   } catch (e) {
+    //     mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
+    //   }
+    // }));
 
     // Removes openFile if dialog is closed
     ui.showDialog(new OpenDialog(this).container, 320, 220, true, true, function () {
-      window.openFile = null;
+      // window.openFile = null;
+      console.log('showDialog');
     });
+
+    
   }).isEnabled = isGraphEnabled;
+
+  //IMPORT-------------------------------------------------------------------------------
+  // this.addAction('import...', function () {
+  //   var answer = window.confirm("Estas seguro en importar un nuevo diagrama?");
+  //   if (answer) {
+  //     // EditorUi.prototype.editor.setGraphXml(window.parent.mxUtils.parseXml('<mxGraphModel dx="667" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>').documentElement);
+  //     Actions.prototype.editor.setGraphXml(window.parent.mxUtils.parseXml('<mxGraphModel dx="273" dy="625" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="Persona" style="shape=actor;whiteSpace=wrap;html=1;fontStyle=1;fontFamily=Helvetica;fontSize=14;fillColor=#438dd4;strokeColor=#000000;strokeWidth=2;fontColor=#FFFFFF;" parent="1" vertex="1"><mxGeometry x="110" y="260" width="160" height="90" as="geometry"/></mxCell><mxCell id="3" value="Database" style="shape=cylinder;whiteSpace=wrap;html=1;fontStyle=1;fontFamily=Helvetica;fontSize=14;fillColor=#438dd4;strokeColor=#000000;strokeWidth=2;fontColor=#FFFFFF;" parent="1" vertex="1"><mxGeometry x="80" y="60" width="160" height="90" as="geometry"/></mxCell></root></mxGraphModel>').documentElement);
+  //   }
+  // }, null, null, '');
+
+
   this.addAction('save', function () {
     saveFile(ui, false);
   }, null, null, 'Ctrl+S').isEnabled = isGraphEnabled;
+
+
   // this.addAction('saveAs...', function () {
   //   saveFile(ui, true);
   // }, null, null, 'Ctrl+Shift+S').isEnabled = isGraphEnabled;
   this.addAction('export...', function () {
     ui.showDialog(new ExportDialog(ui).container, 300, 230, true, true);
   });
+
+
   this.addAction('editDiagram...', function () {
     var dlg = new EditDiagramDialog(ui);
     ui.showDialog(dlg.container, 620, 420, true, true);
     dlg.init();
   });
+
+
   this.addAction('generateCode...', function () {
     ui.showDialog(new GenerateCodeDialog(ui).container, 300, 230, true, true);
   });
+
+
   this.addAction('pageSetup...', function () {
     ui.showDialog(new PageSetupDialog(ui).container, 320, 220, true, true);
   }).isEnabled = isGraphEnabled;
+
+
   this.addAction('print...', function () {
     ui.showDialog(new PrintDialog(ui).container, 300, 180, true, true);
   }, null, 'sprite-print', 'Ctrl+P');
+
+
   this.addAction('preview', function () {
     mxUtils.show(graph, null, 10, 10);
   });
@@ -96,20 +126,30 @@ Actions.prototype.init = function () {
   this.addAction('undo', function () {
     ui.undo();
   }, null, 'sprite-undo', 'Ctrl+Z');
+
+
   this.addAction('redo', function () {
     ui.redo();
   }, null, 'sprite-redo', (!mxClient.IS_WIN) ? 'Ctrl+Shift+Z' : 'Ctrl+Y');
+
+
   this.addAction('cut', function () {
     mxClipboard.cut(graph);
   }, null, 'sprite-cut', 'Ctrl+X');
+
+
   this.addAction('copy', function () {
     mxClipboard.copy(graph);
   }, null, 'sprite-copy', 'Ctrl+C');
+
+
   this.addAction('paste', function () {
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
       mxClipboard.paste(graph);
     }
   }, false, 'sprite-paste', 'Ctrl+V');
+
+
   this.addAction('pasteHere', function (evt) {
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
       graph.getModel().beginUpdate();
@@ -273,7 +313,7 @@ Actions.prototype.init = function () {
         }
       }
 
-	    	var dlg = new TextareaDialog(ui, mxResources.get('editTooltip') + ':', tooltip, function (newValue) {
+      var dlg = new TextareaDialog(ui, mxResources.get('editTooltip') + ':', tooltip, function (newValue) {
         graph.setTooltipForCell(cell, newValue);
       });
       ui.showDialog(dlg.container, 320, 200, true, true);
@@ -296,7 +336,7 @@ Actions.prototype.init = function () {
 
       ui.showLinkDialog(value, mxResources.get('apply'), function (link) {
         link = mxUtils.trim(link);
-    			graph.setLinkForCell(cell, (link.length > 0) ? link : null);
+        graph.setLinkForCell(cell, (link.length > 0) ? link : null);
       });
     }
   });
@@ -320,18 +360,18 @@ Actions.prototype.init = function () {
           }
 
           var pt = graph.getFreeInsertPoint();
-            		var linkCell = new mxCell(
+          var linkCell = new mxCell(
             title, new mxGeometry(pt.x, pt.y, 100, 40),
-            	    	'fontColor=#0000EE;fontStyle=4;rounded=1;overflow=hidden;' + ((icon != null) ?
-            	    	'shape=label;imageWidth=16;imageHeight=16;spacingLeft=26;align=left;image=' + icon :
-            	    	'spacing=10;')
+            'fontColor=#0000EE;fontStyle=4;rounded=1;overflow=hidden;' + ((icon != null) ?
+              'shape=label;imageWidth=16;imageHeight=16;spacingLeft=26;align=left;image=' + icon :
+              'spacing=10;')
           );
-            	    linkCell.vertex = true;
+          linkCell.vertex = true;
 
-            	    graph.setLinkForCell(linkCell, link);
-            	    graph.cellSizeUpdated(linkCell, true);
-            	    graph.setSelectionCell(graph.addCell(linkCell));
-            	    graph.scrollCellToVisible(graph.getSelectionCell());
+          graph.setLinkForCell(linkCell, link);
+          graph.cellSizeUpdated(linkCell, true);
+          graph.setSelectionCell(graph.addCell(linkCell));
+          graph.scrollCellToVisible(graph.getSelectionCell());
         }
       });
 
@@ -354,10 +394,10 @@ Actions.prototype.init = function () {
         var selState = graph.cellEditor.saveSelection();
 
         ui.showLinkDialog(oldValue, mxResources.get('apply'), mxUtils.bind(this, function (value) {
-		    		graph.cellEditor.restoreSelection(selState);
+          graph.cellEditor.restoreSelection(selState);
 
-		    		if (value != null) {
-		    			graph.insertLink(value);
+          if (value != null) {
+            graph.insertLink(value);
           }
         }));
       } else if (graph.isSelectionEmpty()) {
@@ -383,7 +423,7 @@ Actions.prototype.init = function () {
             var geo = graph.getCellGeometry(cell);
 
             if (graph.getModel().isVertex(cell) && state != null && state.text != null &&
-							geo != null && graph.isWrapping(cell)) {
+              geo != null && graph.isWrapping(cell)) {
               geo = geo.clone();
               geo.height = state.text.boundingBox.height / graph.view.scale;
               graph.getModel().setGeometry(cell, geo);
@@ -398,44 +438,44 @@ Actions.prototype.init = function () {
     }
   }, null, null, 'Ctrl+Shift+Y');
   this.addAction('formattedText', function () {
-    	var state = graph.getView().getState(graph.getSelectionCell());
+    var state = graph.getView().getState(graph.getSelectionCell());
 
-    	if (state != null) {
-	    	var value = '1';
-	    	graph.stopEditing();
+    if (state != null) {
+      var value = '1';
+      graph.stopEditing();
 
       graph.getModel().beginUpdate();
       try {
-		    	if (state.style.html == '1') {
-		    		value = null;
-		    		var label = graph.convertValueToString(state.cell);
+        if (state.style.html == '1') {
+          value = null;
+          var label = graph.convertValueToString(state.cell);
 
-		    		if (mxUtils.getValue(state.style, 'nl2Br', '1') != '0') {
+          if (mxUtils.getValue(state.style, 'nl2Br', '1') != '0') {
             // Removes newlines from HTML and converts breaks to newlines
             // to match the HTML output in plain text
             label = label.replace(/\n/g, '').replace(/<br\s*.?>/g, '\n');
           }
 
-		    		// Removes HTML tags
-	    			var temp = document.createElement('div');
-	    			temp.innerHTML = label;
-	    			label = mxUtils.extractTextWithWhitespace(temp.childNodes);
+          // Removes HTML tags
+          var temp = document.createElement('div');
+          temp.innerHTML = label;
+          label = mxUtils.extractTextWithWhitespace(temp.childNodes);
 
           graph.cellLabelChanged(state.cell, label);
-		    	} else {
-		    		// Converts HTML tags to text
-		    		var label = mxUtils.htmlEntities(graph.convertValueToString(state.cell), false);
+        } else {
+          // Converts HTML tags to text
+          var label = mxUtils.htmlEntities(graph.convertValueToString(state.cell), false);
 
-		    		if (mxUtils.getValue(state.style, 'nl2Br', '1') != '0') {
+          if (mxUtils.getValue(state.style, 'nl2Br', '1') != '0') {
             // Converts newlines in plain text to breaks in HTML
             // to match the plain text output
-		    			label = label.replace(/\n/g, '<br/>');
+            label = label.replace(/\n/g, '<br/>');
           }
 
-		    		graph.cellLabelChanged(state.cell, graph.sanitizeHtml(label));
-		    	}
+          graph.cellLabelChanged(state.cell, graph.sanitizeHtml(label));
+        }
 
-		       	graph.setCellStyles('html', value);
+        graph.setCellStyles('html', value);
         ui.fireEvent(new mxEventObject(
           'styleChanged', 'keys', ['html'],
           'values', [(value != null) ? value : '0'], 'cells',
@@ -444,27 +484,27 @@ Actions.prototype.init = function () {
       } finally {
         graph.getModel().endUpdate();
       }
-    	}
+    }
   });
   this.addAction('wordWrap', function () {
-    	var state = graph.getView().getState(graph.getSelectionCell());
-    	var value = 'wrap';
+    var state = graph.getView().getState(graph.getSelectionCell());
+    var value = 'wrap';
 
     graph.stopEditing();
 
-    	if (state != null && state.style[mxConstants.STYLE_WHITE_SPACE] == 'wrap') {
-    		value = null;
-    	}
+    if (state != null && state.style[mxConstants.STYLE_WHITE_SPACE] == 'wrap') {
+      value = null;
+    }
 
-       	graph.setCellStyles(mxConstants.STYLE_WHITE_SPACE, value);
+    graph.setCellStyles(mxConstants.STYLE_WHITE_SPACE, value);
   });
   this.addAction('rotation', function () {
     var value = '0';
-    	var state = graph.getView().getState(graph.getSelectionCell());
+    var state = graph.getView().getState(graph.getSelectionCell());
 
-    	if (state != null) {
-    		value = state.style[mxConstants.STYLE_ROTATION] || value;
-    	}
+    if (state != null) {
+      value = state.style[mxConstants.STYLE_ROTATION] || value;
+    }
 
     var dlg = new FilenameDialog(ui, value, mxResources.get('apply'), function (newValue) {
       if (newValue != null && newValue.length > 0) {
@@ -668,7 +708,7 @@ Actions.prototype.init = function () {
     if (mxResources.isLanguageSupported(mxClient.language)) {
       ext = '_' + mxClient.language;
     }
-    const ourl =RESOURCES_PATH + '/help' + ext + '.html'; 
+    const ourl = RESOURCES_PATH + '/help' + ext + '.html';
     console.log(ourl)
     window.open(ourl);
   });
@@ -795,9 +835,9 @@ Actions.prototype.init = function () {
       graph.getModel().beginUpdate();
       try {
         var cells = graph.getSelectionCells();
-	    		var state = graph.view.getState(cells[0]);
-	    		var style = (state != null) ? state.style : graph.getCellStyle(cells[0]);
-	    		var value = (mxUtils.getValue(style, mxConstants.STYLE_ROUNDED, '0') == '1') ? '0' : '1';
+        var state = graph.view.getState(cells[0]);
+        var style = (state != null) ? state.style : graph.getCellStyle(cells[0]);
+        var value = (mxUtils.getValue(style, mxConstants.STYLE_ROUNDED, '0') == '1') ? '0' : '1';
 
         graph.setCellStyles(mxConstants.STYLE_ROUNDED, value);
         graph.setCellStyles(mxConstants.STYLE_CURVED, null);
@@ -843,10 +883,10 @@ Actions.prototype.init = function () {
     if (cells != null && cells.length > 0) {
       var model = graph.getModel();
 
-	    	var dlg = new TextareaDialog(
+      var dlg = new TextareaDialog(
         this.editorUi, mxResources.get('editStyle') + ':',
-	    			model.getStyle(cells[0]) || '', function (newValue) {
-	    		if (newValue != null) {
+        model.getStyle(cells[0]) || '', function (newValue) {
+          if (newValue != null) {
             graph.setCellStyle(mxUtils.trim(newValue), cells);
           }
         }, null, null, 400, 220
@@ -929,83 +969,83 @@ Actions.prototype.init = function () {
     }
   });
   action = this.addAction('subscript', mxUtils.bind(this, function () {
-	    if (graph.cellEditor.isContentEditing()) {
+    if (graph.cellEditor.isContentEditing()) {
       document.execCommand('subscript', false, null);
     }
   }), null, null, 'Ctrl+,');
   action = this.addAction('superscript', mxUtils.bind(this, function () {
-	    if (graph.cellEditor.isContentEditing()) {
+    if (graph.cellEditor.isContentEditing()) {
       document.execCommand('superscript', false, null);
     }
   }), null, null, 'Ctrl+.');
   this.addAction('image...', function () {
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
       var title = mxResources.get('image') + ' (' + mxResources.get('url') + '):';
-	    	var state = graph.getView().getState(graph.getSelectionCell());
-	    	var value = '';
+      var state = graph.getView().getState(graph.getSelectionCell());
+      var value = '';
 
-	    	if (state != null) {
-	    		value = state.style[mxConstants.STYLE_IMAGE] || value;
-	    	}
+      if (state != null) {
+        value = state.style[mxConstants.STYLE_IMAGE] || value;
+      }
 
-	    	var selectionState = graph.cellEditor.saveSelection();
+      var selectionState = graph.cellEditor.saveSelection();
 
-	    	ui.showImageDialog(title, value, function (newValue, w, h) {
-	    		// Inserts image into HTML text
-	    		if (graph.cellEditor.isContentEditing()) {
-	    			graph.cellEditor.restoreSelection(selectionState);
-	    			graph.insertImage(newValue, w, h);
-	    		} else {
+      ui.showImageDialog(title, value, function (newValue, w, h) {
+        // Inserts image into HTML text
+        if (graph.cellEditor.isContentEditing()) {
+          graph.cellEditor.restoreSelection(selectionState);
+          graph.insertImage(newValue, w, h);
+        } else {
           var cells = graph.getSelectionCells();
 
           if (newValue != null) {
             var select = null;
 
             graph.getModel().beginUpdate();
-			        	try {
-			        		// Inserts new cell if no cell is selected
-			    			if (cells.length == 0) {
-			    				var pt = graph.getFreeInsertPoint();
-			    				cells = [graph.insertVertex(
+            try {
+              // Inserts new cell if no cell is selected
+              if (cells.length == 0) {
+                var pt = graph.getFreeInsertPoint();
+                cells = [graph.insertVertex(
                   graph.getDefaultParent(), null, '', pt.x, pt.y, w, h,
-			    						'shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;'
+                  'shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;'
                 )];
-			    				select = cells;
-			    			}
+                select = cells;
+              }
 
-			        		graph.setCellStyles(mxConstants.STYLE_IMAGE, newValue, cells);
+              graph.setCellStyles(mxConstants.STYLE_IMAGE, newValue, cells);
 
-			        		// Sets shape only if not already shape with image (label or image)
-			        		var state = graph.view.getState(cells[0]);
-			        		var style = (state != null) ? state.style : graph.getCellStyle(cells[0]);
+              // Sets shape only if not already shape with image (label or image)
+              var state = graph.view.getState(cells[0]);
+              var style = (state != null) ? state.style : graph.getCellStyle(cells[0]);
 
-			        		if (style[mxConstants.STYLE_SHAPE] != 'image' && style[mxConstants.STYLE_SHAPE] != 'label') {
-			        			graph.setCellStyles(mxConstants.STYLE_SHAPE, 'image', cells);
-			        		}
+              if (style[mxConstants.STYLE_SHAPE] != 'image' && style[mxConstants.STYLE_SHAPE] != 'label') {
+                graph.setCellStyles(mxConstants.STYLE_SHAPE, 'image', cells);
+              }
 
-				        	if (graph.getSelectionCount() == 1) {
-					        	if (w != null && h != null) {
-					        		var cell = cells[0];
-					        		var geo = graph.getModel().getGeometry(cell);
+              if (graph.getSelectionCount() == 1) {
+                if (w != null && h != null) {
+                  var cell = cells[0];
+                  var geo = graph.getModel().getGeometry(cell);
 
-					        		if (geo != null) {
-					        			geo = geo.clone();
-						        		geo.width = w;
-						        		geo.height = h;
-						        		graph.getModel().setGeometry(cell, geo);
-					        		}
-					        	}
-				        	}
-			        	} finally {
-			        		graph.getModel().endUpdate();
-			        	}
+                  if (geo != null) {
+                    geo = geo.clone();
+                    geo.width = w;
+                    geo.height = h;
+                    graph.getModel().setGeometry(cell, geo);
+                  }
+                }
+              }
+            } finally {
+              graph.getModel().endUpdate();
+            }
 
-			        	if (select != null) {
-			        		graph.setSelectionCells(select);
-			        		graph.scrollCellToVisible(select[0]);
-			        	}
+            if (select != null) {
+              graph.setSelectionCells(select);
+              graph.scrollCellToVisible(select[0]);
+            }
           }
-	    		}
+        }
       }, graph.cellEditor.isContentEditing(), !graph.cellEditor.isContentEditing());
     }
   }).isEnabled = isGraphEnabled;

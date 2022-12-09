@@ -37,12 +37,62 @@ window.addEventListener('load', () => {
     this.actions.addAction('new...', function () {
       var answer = window.confirm("Estas seguro en crear un nuevo diagrama?");
       if (answer) {
+
         EditorUi.prototype.editor.setGraphXml(window.parent.mxUtils.parseXml('<mxGraphModel dx="667" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>').documentElement);
+        // EditorUi.prototype.editor.setGraphXml(window.parent.mxUtils.parseXml('<mxGraphModel dx="273" dy="625" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="Persona" style="shape=actor;whiteSpace=wrap;html=1;fontStyle=1;fontFamily=Helvetica;fontSize=14;fillColor=#438dd4;strokeColor=#000000;strokeWidth=2;fontColor=#FFFFFF;" parent="1" vertex="1"><mxGeometry x="110" y="260" width="160" height="90" as="geometry"/></mxCell><mxCell id="3" value="Database" style="shape=cylinder;whiteSpace=wrap;html=1;fontStyle=1;fontFamily=Helvetica;fontSize=14;fillColor=#438dd4;strokeColor=#000000;strokeWidth=2;fontColor=#FFFFFF;" parent="1" vertex="1"><mxGeometry x="80" y="60" width="160" height="90" as="geometry"/></mxCell></root></mxGraphModel>').documentElement);
       }
 
 
     });
 
+    // this.actions.addAction('import...', function () {
+    //   var answer = window.confirm("Estas seguro en importar un nuevo diagrama?");
+    //   if (answer) {
+    //     // EditorUi.prototype.editor.setGraphXml(window.parent.mxUtils.parseXml('<mxGraphModel dx="667" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>').documentElement);
+    //     // EditorUi.prototype.editor.setGraphXml(window.parent.mxUtils.parseXml('<mxGraphModel dx="273" dy="625" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="Persona" style="shape=actor;whiteSpace=wrap;html=1;fontStyle=1;fontFamily=Helvetica;fontSize=14;fillColor=#438dd4;strokeColor=#000000;strokeWidth=2;fontColor=#FFFFFF;" parent="1" vertex="1"><mxGeometry x="110" y="260" width="160" height="90" as="geometry"/></mxCell><mxCell id="3" value="Database" style="shape=cylinder;whiteSpace=wrap;html=1;fontStyle=1;fontFamily=Helvetica;fontSize=14;fillColor=#438dd4;strokeColor=#000000;strokeWidth=2;fontColor=#FFFFFF;" parent="1" vertex="1"><mxGeometry x="80" y="60" width="160" height="90" as="geometry"/></mxCell></root></mxGraphModel>').documentElement);
+
+    //     // Create a form dynamically
+    //     var form = document.createElement("form");
+    //     form.setAttribute("method", "post");
+    //     form.setAttribute("action", "submit.php");
+
+    //     // Create an input element for emailID
+    //     var ID = document.createElement("input");
+    //     ID.setAttribute("type", "text");
+    //     ID.setAttribute("name", "emailID");
+    //     ID.setAttribute("placeholder", "E-Mail ID");
+
+    //     // Create an input element for password
+    //     var PWD = document.createElement("input");
+    //     PWD.setAttribute("type", "password");
+    //     PWD.setAttribute("name", "password");
+    //     PWD.setAttribute("placeholder", "Password");
+
+    //     // Create a submit button
+    //     var s = document.createElement("input");
+    //     s.setAttribute("type", "submit");
+    //     s.setAttribute("value", "Submit");
+
+    //     // Append the email_ID input to the form
+    //     form.append(ID);
+       
+    //     // Append the password to the form
+    //     form.append(PWD);
+       
+    //     // Append the button to the form
+    //     form.append(s);
+
+    //     document.getElementsByTagName("body")[0]
+    //    .appendChild(form);
+
+    //     // editorUiInit.showDialog(new OpenDialog(this).container, 320, 220, true, true, function () {
+    //     //   window.openFile = null;
+    //     // });
+    //     // var result = window.showModalDialog("http://www.java2s.com", '<h1>Heading level 1</h1>', "dialogWidth:300px; dialogHeight:201px; center:yes");
+    //     console.log(form.innerHTML);
+    //     console.log("addAction Import");
+    //   }
+    // }, null, null, '');
 
     this.actions.addAction('save', function () {
       //console.log('save action desde indexJS');
@@ -105,7 +155,7 @@ window.addEventListener('load', () => {
   // Adds required resources (disables loading of fallback properties, this can only
   // be used if we know that all keys are defined in the language specific file)
   mxResources.loadDefaultBundle = false;
-  
+
   var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
     mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
 
